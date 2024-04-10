@@ -47,7 +47,7 @@ type ServiceTypes = {
 
 const app = feathers<ServiceTypes>()
 
-app.use('my-service', new MyService())
+app.use('my-service', new MyServiceClass())
 app.use('my-service-object', myServiceObject)
 ```
 
