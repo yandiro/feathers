@@ -5,7 +5,7 @@ import { ref, computed, onMounted } from 'vue'
 import { uniqBy } from './helpers'
 import { useQuery } from './useQuery'
 
-const packageSource = 'https://ecosystem.feathershq.workers.dev/'
+const packageSource = 'https://ecosystem.featherscloud.workers.dev/'
 
 const makeDate = (obj: Record<string, any>, key: string) => {
   if (obj[key]) {
