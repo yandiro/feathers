@@ -63,7 +63,7 @@ const coreCount = computed(() => {
   return fetchedPackages.value.filter(filterCore).length
 })
 
-const packagesAreOldIfOlderThan = 1000 * 60 * 60 * 24 * 365 * 2.9 // 3 years
+const packagesAreOldIfOlderThan = 1000 * 60 * 60 * 24 * 365 * 5
 const showOld = ref(false)
 
 function filterOld(pkg: PackageOutput) {
