@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.25](https://github.com/feathersjs/feathers/compare/v5.0.24...v5.0.25) (2024-05-03)
+
+### Bug Fixes
+
+- **knex:** Update commited to boolean type ([#3458](https://github.com/feathersjs/feathers/issues/3458)) ([5fa4dbc](https://github.com/feathersjs/feathers/commit/5fa4dbc06d0126ac18f5643562d0b74f03502caa))
+
 ## [5.0.24](https://github.com/feathersjs/feathers/compare/v5.0.23...v5.0.24) (2024-03-13)
 
 **Note:** Version bump only for package @feathersjs/knex

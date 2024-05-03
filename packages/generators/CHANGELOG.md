@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.25](https://github.com/feathersjs/feathers/compare/v5.0.24...v5.0.25) (2024-05-03)
+
+### Bug Fixes
+
+- **generators:** better types for enabled methods ([#3474](https://github.com/feathersjs/feathers/issues/3474)) ([bdb3d3a](https://github.com/feathersjs/feathers/commit/bdb3d3a308322bfed3caa4214e4b6a72f1a84944))
+
 ## [5.0.24](https://github.com/feathersjs/feathers/compare/v5.0.23...v5.0.24) (2024-03-13)
 
 ### Bug Fixes

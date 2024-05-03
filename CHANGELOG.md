@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.25](https://github.com/feathersjs/feathers/compare/v5.0.24...v5.0.25) (2024-05-03)
+
+### Bug Fixes
+
+- **generators:** better types for enabled methods ([#3474](https://github.com/feathersjs/feathers/issues/3474)) ([bdb3d3a](https://github.com/feathersjs/feathers/commit/bdb3d3a308322bfed3caa4214e4b6a72f1a84944))
+- **knex:** Update commited to boolean type ([#3458](https://github.com/feathersjs/feathers/issues/3458)) ([5fa4dbc](https://github.com/feathersjs/feathers/commit/5fa4dbc06d0126ac18f5643562d0b74f03502caa))
+- **oauth:** Export OAuthService type ([#3479](https://github.com/feathersjs/feathers/issues/3479)) ([e7185cd](https://github.com/feathersjs/feathers/commit/e7185cde63990a0d24a7180c63b61dbc8ef6cd5b))
+- Reduce usage of lodash ([#3455](https://github.com/feathersjs/feathers/issues/3455)) ([8ce807a](https://github.com/feathersjs/feathers/commit/8ce807a5ca53ff5b8d5107a0656c6329404e6e6c))
+
 ## [5.0.24](https://github.com/feathersjs/feathers/compare/v5.0.23...v5.0.24) (2024-03-13)
 
 ### Bug Fixes
