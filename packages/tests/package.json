@@ -51,10 +51,10 @@
   "devDependencies": {
     "@feathersjs/feathers": "^5.0.24",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.12.2",
+    "@types/node": "^20.12.8",
     "mocha": "^10.4.0",
     "shx": "^0.3.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   }
 }
