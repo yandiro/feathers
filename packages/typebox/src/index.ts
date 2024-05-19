@@ -6,7 +6,8 @@ import {
   TSchema,
   ObjectOptions,
   TIntersect,
-  TUnion
+  TUnion,
+  type TRecord
 } from '@sinclair/typebox'
 import { jsonSchema, Validator, DataValidatorMap, Ajv } from '@feathersjs/schema'
 
@@ -27,7 +28,7 @@ export type TDataSchemaMap = {
  * @returns A compiled validation function
  */
 export const getValidator = <T = any, R = T>(
-  schema: TObject | TIntersect | TUnion<TObject[]>,
+  schema: TObject | TIntersect | TUnion<TObject[]> | TRecord,
   validator: Ajv
 ): Validator<T, R> => jsonSchema.getValidator(schema as any, validator)
 
