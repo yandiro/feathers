@@ -19,7 +19,7 @@ This sets `app.get('port')` using the `PORT` environment variable (if it is avai
 
 <BlockQuote type="tip">
 
-See the [node-config custom envrionment variable](https://github.com/node-config/node-config/wiki/Environment-Variables#custom-environment-variables) documentation for more information.
+See the [node-config custom environment variable](https://github.com/node-config/node-config/wiki/Environment-Variables#custom-environment-variables) documentation for more information.
 
 </BlockQuote>
 
