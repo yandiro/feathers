@@ -1,18 +1,20 @@
 import { BadRequest } from '@feathersjs/errors'
 import { Schema } from './schema'
 
+type PromiseOrLiteral<V> = Promise<V> | V
+
 export type PropertyResolver<T, V, C> = ((
   value: V | undefined,
   obj: T,
   context: C,
   status: ResolverStatus<T, C>
-) => Promise<V | undefined>) & { [IS_VIRTUAL]?: boolean }
+) => PromiseOrLiteral<V | undefined>) & { [IS_VIRTUAL]?: boolean }
 
 export type VirtualResolver<T, V, C> = (
   obj: T,
   context: C,
   status: ResolverStatus<T, C>
-) => Promise<V | undefined>
+) => PromiseOrLiteral<V | undefined>
 
 export const IS_VIRTUAL = Symbol.for('@feathersjs/schema/virtual')
 
@@ -40,7 +42,7 @@ export type ResolverConverter<T, C> = (
   obj: any,
   context: C,
   status: ResolverStatus<T, C>
-) => Promise<T | undefined>
+) => PromiseOrLiteral<T | undefined>
 
 export interface ResolverOptions<T, C> {
   schema?: Schema<T>

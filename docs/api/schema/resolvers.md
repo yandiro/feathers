@@ -1,6 +1,7 @@
 ---
 outline: deep
 ---
+
 # Resolvers
 
 Resolvers dynamically resolve individual properties based on a context, in a Feathers application usually the [hook context](../hooks.md#hook-context).
@@ -38,23 +39,23 @@ type Message = {
 }
 
 class MyContext {
-  async getUser(id) {
+  getUser(id) {
     return {
       id,
       name: 'David'
     }
   }
 
-  async getLikes(messageId) {
+  getLikes(messageId) {
     return 10
   }
 }
 
 const messageResolver = resolve<Message, MyContext>({
-  likes: async (value, message, context) => {
+  likes: (value, message, context) => {
     return context.getLikes(message.id)
   },
-  user: async (value, message, context) => {
+  user: (value, message, context) => {
     return context.getUser(message.userId)
   }
 })
@@ -71,7 +72,7 @@ const resolvedMessage = await messageResolver.resolve(
 
 ## Property resolvers
 
-Property resolvers are a map of property names to resolver functions. A resolver function is an `async` function that resolves a property on a data object. If it returns `undefined` the property will not be included. It gets passed the following parameters:
+Property resolvers are a map of property names to resolver functions. A resolver function is an `async` or regular function that resolves a property on a data object. If it returns `undefined` the property will not be included. It gets passed the following parameters:
 
 - `value` - The current value which can also be `undefined`
 - `data` - The initial data object
@@ -85,7 +86,7 @@ const userResolver = resolve<User, MyContext>({
 
     return user.age >= drinkingAge
   },
-  fullName: async (value, user, context) => {
+  fullName: (value, user, context) => {
     return `${user.firstName} ${user.lastName}`
   }
 })
@@ -110,7 +111,7 @@ const userResolver = resolve<User, MyContext>({
 
     return user.age >= drinkingAge
   }),
-  fullName: virtual(async (user, context) => {
+  fullName: virtual((user, context) => {
     return `${user.firstName} ${user.lastName}`
   })
 })
@@ -126,7 +127,7 @@ Virtual resolvers should always be used when combined with a [database adapter](
 
 A resolver takes the following options as the second parameter:
 
-- `converter` (optional): A `async (data, context) => {}` function that can return a completely new representation of the data. A `converter` runs before `properties` resolvers.
+- `converter` (optional): A `(data, context) => {}` or `async (data, context) => {}` function that can return a completely new representation of the data. A `converter` runs before `properties` resolvers.
 
 ```ts
 const userResolver = resolve<User, MyContext>(
@@ -185,22 +186,16 @@ type MessageData = Static<typeof messageDataSchema>
 
 // Resolver that automatically set `userId` and `createdAt`
 const messageDataResolver = resolve<Message, HookContext>({
-  userId: async (value, message, context) => {
-    // Associate the currently authenticated user
-    return context.params?.user.id
-  },
-  createdAt: async () => {
-    // Return the current date
-    return Date.now()
-  }
+  // Associate the currently authenticated user
+  userId: (value, message, context) => context.params?.user.id,
+  // Return the current date
+  createdAt: () => Date.now()
 })
 
 // Resolver that automatically sets `updatedAt`
 const messagePatchResolver = resolve<Message, HookContext>({
-  updatedAt: async () => {
-    // Return the current date
-    return Date.now()
-  }
+  // Return the current date
+  updatedAt: () => Date.now()
 })
 
 app.service('users').hooks({
@@ -267,7 +262,8 @@ type Message = Static<typeof messageSchema>
 export const messageResolver = resolve<Message, HookContext>({
   user: virtual(async (message, context) => {
     // Populate the user associated via `userId`
-    return context.app.service('users').get(message.userId)
+    const user = await context.app.service('users').get(message.userId)
+    return user
   })
 })
 
@@ -301,7 +297,7 @@ type User = Static<typeof userSchema>
 
 export const userExternalResolver = resolve<User, HookContext>({
   // Always hide the password for external responses
-  password: async () => undefined
+  password: () => undefined
 })
 
 // Dispatch should be resolved on every method
@@ -324,11 +320,11 @@ In order to get the safe data from resolved associations **all services** involv
 
 Query resolvers use the `hooks.resolveQuery(...resolvers)` hook to modify `params.query`. This is often used to set default values or limit the query so a user can only request data they are allowed to see. It is possible to pass multiple resolvers which will run in the order they are passed, using the previous data. `schemaHooks.resolveQuery` can be used as an `around` or `before` hook.
 
-In this example for a `User` schema we are first checking if a user is available in our request. In the case a user is available we are returning the user's ID. Otherwise we return whatever value was provided for `id`. 
+In this example for a `User` schema we are first checking if a user is available in our request. In the case a user is available we are returning the user's ID. Otherwise we return whatever value was provided for `id`.
 
 `context.params.user` would only be set if the request contains a user. This is usually the case when an external request is made. In the case of an internal request we may not have a specific user we are dealing with, and we will just return `value`.
 
-If we were to receive an internal request, such as `app.service('users').get(123)`, `context.params.user` would be `undefined` and  we would just return the `value` which is `123`. 
+If we were to receive an internal request, such as `app.service('users').get(123)`, `context.params.user` would be `undefined` and we would just return the `value` which is `123`.
 
 ```ts
 import { hooks as schemaHooks, resolve } from '@feathersjs/schema'
@@ -353,7 +349,7 @@ export type UserQuery = Static<typeof userQuerySchema>
 
 export const userQueryResolver = resolve<UserQuery, HookContext>({
   // If there is an authenticated user, they can only see their own data
-  id: async (value, query, context) => {
+  id: (value, query, context) => {
     if (context.params.user) {
       return context.params.user.id
     }
@@ -372,7 +368,7 @@ app.service('users').hooks({
 
 For a more complicated example. We will make a separate `queryResolver`, called `companyFilterQueryResolver`, that will act as a ownership filter. We will have a `Company` service that is owned by a `User`. We will assume our app has two registered users and two companies. Each user owning one company. For simplicity, `User1` owns `Company1`, and `User2` owns `Company2`
 
-We want to make sure only the user that owns the company can make any requests related to it. Our schema contains a `ownerUser` field, this is the owner of the company. When a request is made to the company schema, we are effectivly filtering our search for companies to be only those whose `ownerUser` matches the requesting user's id. 
+We want to make sure only the user that owns the company can make any requests related to it. Our schema contains a `ownerUser` field, this is the owner of the company. When a request is made to the company schema, we are effectivly filtering our search for companies to be only those whose `ownerUser` matches the requesting user's id.
 
 So if a `GET /company` request is made by `User1`, our resolver will convert our query to `GET /company?name=Company1&ownerUser={User1.id}`. The result will only return an array of 1 company to `User1`
 
@@ -404,7 +400,7 @@ export const companyQueryValidator = getValidator(companyQuerySchema, queryValid
 export const companyQueryResolver = resolve<CompanyQuery, HookContext>({})
 
 export const companyFilterQueryResolver = resolve<Company, HookContext>({
-  ownerUser: async (value, obj, context) => {
+  ownerUser: (value, obj, context) => {
     if (context.params.user) {
       return context.params.user.id
     }
@@ -412,4 +408,3 @@ export const companyFilterQueryResolver = resolve<Company, HookContext>({
   }
 })
 ```
-
