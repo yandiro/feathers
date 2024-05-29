@@ -83,6 +83,11 @@ const testSuite = adapterTests([
   'params.adapter + multi'
 ])
 
+const defaultPaginate = {
+  default: 10,
+  max: 50
+}
+
 describe('Feathers MongoDB Service', () => {
   const personSchema = {
     $id: 'Person',
@@ -384,6 +389,96 @@ describe('Feathers MongoDB Service', () => {
       assert.strictEqual(patched[0].friends?.length, 2)
     })
 
+    it('can use $limit in patch', async () => {
+      const data = { name: 'ddd' }
+      const query = { $limit: 1 }
+
+      const result = await peopleService._patch(null, data, {
+        query
+      })
+
+      assert.strictEqual(result.length, 1)
+      assert.strictEqual(result[0].name, 'ddd')
+
+      const pipelineResult = await peopleService._patch(null, data, {
+        pipeline: [],
+        query
+      })
+
+      assert.strictEqual(pipelineResult.length, 1)
+      assert.strictEqual(pipelineResult[0].name, 'ddd')
+    })
+
+    it('can use $limit in remove', async () => {
+      const query = { $limit: 1 }
+
+      const result = await peopleService._remove(null, {
+        query
+      })
+
+      assert.strictEqual(result.length, 1)
+
+      const pipelineResult = await peopleService._remove(null, {
+        pipeline: [],
+        query
+      })
+
+      assert.strictEqual(pipelineResult.length, 1)
+    })
+
+    it('can use $sort in patch', async () => {
+      const updated = await peopleService._patch(
+        null,
+        { name: 'ddd' },
+        {
+          query: { $limit: 1, $sort: { name: -1 } }
+        }
+      )
+
+      const result = await peopleService.find({
+        paginate: false,
+        query: { $limit: 1, $sort: { name: -1 } }
+      })
+
+      assert.strictEqual(updated.length, 1)
+      assert.strictEqual(result[0].name, 'ddd')
+
+      const pipelineUpdated = await peopleService._patch(
+        null,
+        { name: 'eee' },
+        {
+          pipeline: [],
+          query: { $limit: 1, $sort: { name: -1 } }
+        }
+      )
+
+      const pipelineResult = await peopleService.find({
+        paginate: false,
+        pipeline: [],
+        query: { $limit: 1, $sort: { name: -1 } }
+      })
+
+      assert.strictEqual(pipelineUpdated.length, 1)
+      assert.strictEqual(pipelineResult[0].name, 'eee')
+    })
+
+    it('can use $sort in remove', async () => {
+      const removed = await peopleService._remove(null, {
+        query: { $limit: 1, $sort: { name: -1 } }
+      })
+
+      assert.strictEqual(removed.length, 1)
+      assert.strictEqual(removed[0].name, 'ccc')
+
+      const pipelineRemoved = await peopleService._remove(null, {
+        pipeline: [],
+        query: { $limit: 1, $sort: { name: -1 } }
+      })
+
+      assert.strictEqual(pipelineRemoved.length, 1)
+      assert.strictEqual(pipelineRemoved[0].name, 'aaa')
+    })
+
     it('overrides default index selection using hint param if present', async () => {
       const indexed = await peopleService.create({
         name: 'Indexed',
@@ -474,6 +569,175 @@ describe('Feathers MongoDB Service', () => {
       assert.deepEqual(result[0].person, bob)
       assert.equal(result.length, 1)
     })
+
+    it('can count documents with aggregation', async () => {
+      const service = app.service('people')
+      const paginateBefore = service.options.paginate
+      service.options.paginate = defaultPaginate
+      const query = { age: { $gte: 25 } }
+      const findResult = await app.service('people').find({ query })
+      const aggregationResult = await app.service('people').find({ query, pipeline: [] })
+
+      assert.deepStrictEqual(findResult.total, aggregationResult.total)
+
+      service.options.paginate = paginateBefore
+    })
+
+    it('can use aggregation in _get', async () => {
+      const dave = await app.service('people').create({ name: 'Dave', age: 25 })
+      const result = await app.service('people').get(dave._id, {
+        pipeline: [{ $addFields: { aggregation: true } }]
+      })
+
+      assert.deepStrictEqual(result, { ...dave, aggregation: true })
+
+      app.service('people').remove(dave._id)
+    })
+
+    it('can use aggregation in _create', async () => {
+      const dave = (await app.service('people').create(
+        { name: 'Dave' },
+        {
+          pipeline: [{ $addFields: { aggregation: true } }]
+        }
+      )) as any
+
+      assert.deepStrictEqual(dave.aggregation, true)
+
+      app.service('people').remove(dave._id)
+    })
+
+    it('can use aggregation in multi _create', async () => {
+      app.service('people').options.multi = true
+      const dave = (await app.service('people').create([{ name: 'Dave' }], {
+        pipeline: [{ $addFields: { aggregation: true } }]
+      })) as any
+
+      assert.deepStrictEqual(dave[0].aggregation, true)
+
+      app.service('people').options.multi = false
+      app.service('people').remove(dave[0]._id)
+    })
+
+    it('can use aggregation in _update', async () => {
+      const dave = await app.service('people').create({ name: 'Dave' })
+      const result = await app.service('people').update(
+        dave._id,
+        {
+          name: 'Marshal'
+        },
+        {
+          pipeline: [{ $addFields: { aggregation: true } }]
+        }
+      )
+
+      assert.deepStrictEqual(result, { ...dave, name: 'Marshal', aggregation: true })
+
+      app.service('people').remove(dave._id)
+    })
+
+    it('can use aggregation in _patch', async () => {
+      const dave = await app.service('people').create({ name: 'Dave' })
+      const result = await app.service('people').patch(
+        dave._id,
+        {
+          name: 'Marshal'
+        },
+        {
+          pipeline: [{ $addFields: { aggregation: true } }]
+        }
+      )
+
+      assert.deepStrictEqual(result, { ...dave, name: 'Marshal', aggregation: true })
+
+      app.service('people').remove(dave._id)
+    })
+
+    it('can use aggregation in multi _patch', async () => {
+      app.service('people').options.multi = true
+      const dave = await app.service('people').create({ name: 'Dave' })
+      const result = await app.service('people').patch(
+        null,
+        {
+          name: 'Marshal'
+        },
+        {
+          query: { _id: dave._id },
+          pipeline: [{ $addFields: { aggregation: true } }]
+        }
+      )
+
+      assert.deepStrictEqual(result[0], { ...dave, name: 'Marshal', aggregation: true })
+
+      app.service('people').options.multi = false
+      app.service('people').remove(dave._id)
+    })
+
+    it('can use aggregation and query in _update', async () => {
+      const dave = await app.service('people').create({ name: 'Dave' })
+      const result = await app.service('people').update(
+        dave._id,
+        {
+          name: 'Marshal'
+        },
+        {
+          query: { name: 'Dave' },
+          pipeline: [{ $addFields: { aggregation: true } }]
+        }
+      )
+
+      assert.deepStrictEqual(result, { ...dave, name: 'Marshal', aggregation: true })
+
+      app.service('people').remove(dave._id)
+    })
+
+    it('can use aggregation and query in _patch', async () => {
+      const dave = await app.service('people').create({ name: 'Dave' })
+      const result = await app.service('people').patch(
+        dave._id,
+        {
+          name: 'Marshal'
+        },
+        {
+          query: { name: 'Dave' },
+          pipeline: [{ $addFields: { aggregation: true } }]
+        }
+      )
+
+      assert.deepStrictEqual(result, { ...dave, name: 'Marshal', aggregation: true })
+
+      app.service('people').remove(dave._id)
+    })
+
+    it('can use aggregation in _remove', async () => {
+      const dave = await app.service('people').create({ name: 'Dave' })
+      const result = await app.service('people').remove(dave._id, {
+        pipeline: [{ $addFields: { aggregation: true } }]
+      })
+
+      assert.deepStrictEqual(result, { ...dave, aggregation: true })
+
+      try {
+        await await app.service('people').get(dave._id)
+        throw new Error('Should never get here')
+      } catch (error: any) {
+        assert.strictEqual(error.name, 'NotFound', 'Got a NotFound Feathers error')
+      }
+    })
+
+    it('can use aggregation in multi _remove', async () => {
+      app.service('people').options.multi = true
+      const dave = await app.service('people').create({ name: 'Dave' })
+      const result = await app.service('people').remove(null, {
+        query: { _id: dave._id },
+        pipeline: [{ $addFields: { aggregation: true } }]
+      })
+
+      assert.deepStrictEqual(result[0], { ...dave, aggregation: true })
+
+      app.service('people').options.multi = false
+      // app.service('people').remove(dave._id)
+    })
   })
 
   describe('query validation', () => {
@@ -489,6 +753,86 @@ describe('Feathers MongoDB Service', () => {
       assert.deepStrictEqual(result, [dave])
 
       app.service('people').remove(dave._id)
+    })
+  })
+
+  // TODO: Should this test be part of the adapterTests?
+  describe('Updates mutated query', () => {
+    it('Can re-query mutated data', async () => {
+      const dave = await app.service('people').create({ name: 'Dave' })
+      const dave2 = await app.service('people').create({ name: 'Dave' })
+      app.service('people').options.multi = true
+
+      const updated = await app
+        .service('people')
+        .update(dave._id, { name: 'Marshal' }, { query: { name: 'Dave' } })
+
+      assert.deepStrictEqual(updated, {
+        ...dave,
+        name: 'Marshal'
+      })
+
+      const patched = await app
+        .service('people')
+        .patch(dave._id, { name: 'Dave' }, { query: { name: 'Marshal' } })
+
+      assert.deepStrictEqual(patched, {
+        ...dave,
+        name: 'Dave'
+      })
+
+      const updatedPipeline = await app
+        .service('people')
+        .update(dave._id, { name: 'Marshal' }, { query: { name: 'Dave' }, pipeline: [] })
+
+      assert.deepStrictEqual(updatedPipeline, {
+        ...dave,
+        name: 'Marshal'
+      })
+
+      const patchedPipeline = await app
+        .service('people')
+        .patch(dave._id, { name: 'Dave' }, { query: { name: 'Marshal' }, pipeline: [] })
+
+      assert.deepStrictEqual(patchedPipeline, {
+        ...dave,
+        name: 'Dave'
+      })
+
+      const multiPatch = await app
+        .service('people')
+        .patch(null, { name: 'Marshal' }, { query: { name: 'Dave' } })
+
+      assert.deepStrictEqual(multiPatch, [
+        {
+          ...dave,
+          name: 'Marshal'
+        },
+        {
+          ...dave2,
+          name: 'Marshal'
+        }
+      ])
+
+      const multiPatchPipeline = await app
+        .service('people')
+        .patch(null, { name: 'Dave' }, { query: { name: 'Marshal' }, pipeline: [] })
+
+      assert.deepStrictEqual(multiPatchPipeline, [
+        {
+          ...dave,
+          name: 'Dave'
+        },
+        {
+          ...dave2,
+          name: 'Dave'
+        }
+      ])
+
+      app.service('people').options.multi = false
+
+      app.service('people').remove(dave._id)
+      app.service('people').remove(dave2._id)
     })
   })
 
