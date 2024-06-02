@@ -6,7 +6,7 @@ export function stripSlashes(name: string) {
 export type KeyValueCallback<T> = (value: any, key: string) => T
 
 /**
- * If the object is an array, it will iterate over every element. 
+ * If the object is an array, it will iterate over every element.
  * Otherwise, it will iterate over every key in the object.
  */
 export function each(obj: Record<string, any> | any[], callback: KeyValueCallback<void>) {
@@ -19,9 +19,9 @@ export function each(obj: Record<string, any> | any[], callback: KeyValueCallbac
 
 /**
  * Check if some values in the object pass the test implemented by the provided function
- * 
+ *
  * returns true if some values pass the test, otherwise false
- * 
+ *
  * returns false if the object is empty
  */
 export function some(value: Record<string, any>, callback: KeyValueCallback<boolean>) {
@@ -36,9 +36,9 @@ export function some(value: Record<string, any>, callback: KeyValueCallback<bool
 
 /**
  * Check if all values in the object pass the test implemented by the provided function
- * 
+ *
  * returns true if all values pass the test, otherwise false
- * 
+ *
  * returns true if the object is empty
  */
 export function every(value: any, callback: KeyValueCallback<boolean>) {
@@ -67,7 +67,7 @@ export function values(obj: any) {
 
 /**
  * Check if values in the source object are equal to the target object
- * 
+ *
  * Does a shallow comparison
  */
 export function isMatch(target: any, source: any) {
@@ -162,9 +162,9 @@ export function createSymbol(name: string) {
 /**
  * A set of lodash-y utility functions that use ES6
  *
- * @deprecated Don't use `import { _ } from '@feathersjs/commons'`. You're importing a bunch of functions. You probably only need a few. 
+ * @deprecated Don't use `import { _ } from '@feathersjs/commons'`. You're importing a bunch of functions. You probably only need a few.
  * Import them directly instead. For example: `import { merge } from '@feathersjs/commons'`.
- * 
+ *
  * If you really want to import all functions or do not care about cherry picking, you can use `import * as _ from '@feathersjs/commons'`.
  */
 export const _ = {
@@ -180,7 +180,13 @@ export const _ = {
   extend,
   omit,
   pick,
-  merge
+  merge,
+  isPromise,
+  createSymbol
 }
 
 export * from './debug'
+
+if (typeof module !== 'undefined') {
+  module.exports = Object.assign(_, module.exports)
+}
