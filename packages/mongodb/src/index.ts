@@ -41,6 +41,7 @@ export class MongoDBService<
     return this._create(data, params)
   }
 
+  async update(id: NullableAdapterId, data: Data, params?: ServiceParams): Promise<Result>
   async update(id: AdapterId, data: Data, params?: ServiceParams): Promise<Result> {
     return this._update(id, data, {
       ...params,
