@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.26](https://github.com/feathersjs/feathers/compare/v5.0.25...v5.0.26) (2024-06-09)
+
+### Bug Fixes
+
+- **schema:** Allow regular functions in resolvers ([#3487](https://github.com/feathersjs/feathers/issues/3487)) ([187868e](https://github.com/feathersjs/feathers/commit/187868edd9c0c9d885c482b85be7a90655c86ca2))
+
 ## [5.0.25](https://github.com/feathersjs/feathers/compare/v5.0.24...v5.0.25) (2024-05-03)
 
 **Note:** Version bump only for package @feathersjs/schema

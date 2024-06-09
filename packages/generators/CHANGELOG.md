@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.26](https://github.com/feathersjs/feathers/compare/v5.0.25...v5.0.26) (2024-06-09)
+
+### Bug Fixes
+
+- **generators:** Fix migrate:make script in generated app ([#3490](https://github.com/feathersjs/feathers/issues/3490)) ([c7b0111](https://github.com/feathersjs/feathers/commit/c7b011150152e62a35f3f8ab04d6dde6d6727583))
+
 ## [5.0.25](https://github.com/feathersjs/feathers/compare/v5.0.24...v5.0.25) (2024-05-03)
 
 ### Bug Fixes
