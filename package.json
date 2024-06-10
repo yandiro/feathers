@@ -1,5 +1,5 @@
 {
-  "name": "feathers",
+  "name": "@feathersjs/feathers",
   "private": true,
   "homepage": "http://feathersjs.com",
   "repository": {
