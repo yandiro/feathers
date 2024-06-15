@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.26](https://github.com/feathersjs/feathers/compare/v5.0.25...v5.0.26) (2024-06-09)
+
+### Bug Fixes
+
+- **typebox:** Add TRecord to getValidator arg1 type ([#3488](https://github.com/feathersjs/feathers/issues/3488)) ([ffbcc0a](https://github.com/feathersjs/feathers/commit/ffbcc0ad0c361f77171f9ad6224006727644433a))
+
 ## [5.0.25](https://github.com/feathersjs/feathers/compare/v5.0.24...v5.0.25) (2024-05-03)
 
 **Note:** Version bump only for package @feathersjs/typebox

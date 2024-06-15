@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.26](https://github.com/feathersjs/feathers/compare/v5.0.25...v5.0.26) (2024-06-09)
+
+### Bug Fixes
+
+- **adapter-commons:** Faster sorter ([#3495](https://github.com/feathersjs/feathers/issues/3495)) ([22243e4](https://github.com/feathersjs/feathers/commit/22243e4d92edc1a7343b4cf42be6dfb22e8b86d5))
+- **generators:** Fix migrate:make script in generated app ([#3490](https://github.com/feathersjs/feathers/issues/3490)) ([c7b0111](https://github.com/feathersjs/feathers/commit/c7b011150152e62a35f3f8ab04d6dde6d6727583))
+- **mongodb:** Added Update Method Prototype to MongoDBService Class ([#3494](https://github.com/feathersjs/feathers/issues/3494)) ([428f23a](https://github.com/feathersjs/feathers/commit/428f23a8c622cd8bc4d06253206aadd514267846))
+- **mongodb:** MongoDB Aggregation improvements ([#3366](https://github.com/feathersjs/feathers/issues/3366)) ([f2829b1](https://github.com/feathersjs/feathers/commit/f2829b1f8e33d13caae3557d37225d990467fb39))
+- **schema:** Allow regular functions in resolvers ([#3487](https://github.com/feathersjs/feathers/issues/3487)) ([187868e](https://github.com/feathersjs/feathers/commit/187868edd9c0c9d885c482b85be7a90655c86ca2))
+- **typebox:** Add TRecord to getValidator arg1 type ([#3488](https://github.com/feathersjs/feathers/issues/3488)) ([ffbcc0a](https://github.com/feathersjs/feathers/commit/ffbcc0ad0c361f77171f9ad6224006727644433a))
+
 ## [5.0.25](https://github.com/feathersjs/feathers/compare/v5.0.24...v5.0.25) (2024-05-03)
 
 ### Bug Fixes
