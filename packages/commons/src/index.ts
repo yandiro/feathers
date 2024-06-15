@@ -185,6 +185,8 @@ export const _ = {
   createSymbol
 }
 
+export default _
+
 export * from './debug'
 
 if (typeof module !== 'undefined') {
