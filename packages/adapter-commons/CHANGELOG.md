@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.27](https://github.com/feathersjs/feathers/compare/v5.0.26...v5.0.27) (2024-06-18)
+
+**Note:** Version bump only for package @feathersjs/adapter-commons
+
 ## [5.0.26](https://github.com/feathersjs/feathers/compare/v5.0.25...v5.0.26) (2024-06-09)
 
 ### Bug Fixes

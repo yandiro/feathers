@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.27](https://github.com/feathersjs/feathers/compare/v5.0.26...v5.0.27) (2024-06-18)
+
+### Bug Fixes
+
+- **authentication-oauth:** Allow POST oauth callbacks ([#3497](https://github.com/feathersjs/feathers/issues/3497)) ([ffcc90b](https://github.com/feathersjs/feathers/commit/ffcc90bb95329cbb4b8f310e37024d417c216d8c))
+
 ## [5.0.26](https://github.com/feathersjs/feathers/compare/v5.0.25...v5.0.26) (2024-06-09)
 
 ### Bug Fixes
