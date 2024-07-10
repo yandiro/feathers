@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.29](https://github.com/feathersjs/feathers/compare/v5.0.28...v5.0.29) (2024-07-10)
+
+### Bug Fixes
+
+- **generators:** Fix generating of gitignore ([#3514](https://github.com/feathersjs/feathers/issues/3514)) ([cabc397](https://github.com/feathersjs/feathers/commit/cabc397d2e4378c4bce79a60f2d196713cce4d8c))
+
 ## [5.0.28](https://github.com/feathersjs/feathers/compare/v5.0.27...v5.0.28) (2024-07-10)
 
 **Note:** Version bump only for package @feathersjs/generators

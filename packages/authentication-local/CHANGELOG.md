@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.29](https://github.com/feathersjs/feathers/compare/v5.0.28...v5.0.29) (2024-07-10)
+
+**Note:** Version bump only for package @feathersjs/authentication-local
+
 ## [5.0.28](https://github.com/feathersjs/feathers/compare/v5.0.27...v5.0.28) (2024-07-10)
 
 **Note:** Version bump only for package @feathersjs/authentication-local
